@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Attendance Login</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      background:#f4f6fb;
+    }
+    .card { width:380px; padding:20px; border-radius:16px; background:#fff; }
+    .roles { display:flex; justify-content:space-around; margin:20px 0; }
+    .role {
+      width:140px;
+      text-align:center;
+      padding:16px;
+      border-radius:14px;
+      background:#eef1ff;
+      cursor:pointer;
+      transition:.3s;
+    }
+    .role:hover { background:#dbe0ff; transform:translateY(-4px); }
+    .icon { font-size:40px; }
+    #loginForm { display:none; }
+
+    #loginForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* 👈 centers inputs and button */
+    gap: 14px;
+    }
+
+  #loginForm input,
+  #loginForm button {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2 style="text-align:center;">Select Login</h2>
+
+  <div class="roles">
+    <div class="role" onclick="selectRole('student')">
+      <div class="icon">🎓</div>
+      <b>Student</b>
+    </div>
+
+    <div class="role" onclick="selectRole('teacher')">
+      <div class="icon">👩‍🏫</div>
+      <b>Teacher</b>
+    </div>
+  </div>
+
+  <div id="loginForm">
+    <h3 id="roleTitle" style="text-align:center;"></h3>
+    <input id="username" class="modern-input" placeholder="Username">
+    <input id="password" type="password" class="modern-input" placeholder="Password">
+    <button class="btn primary" style="width:100%;" onclick="login()">Login</button>
+    <p id="error" style="color:red;text-align:center;"></p>
+  </div>
+</div>
+
+<script>
+let role = "";
+
+function selectRole(r) {
+  role = r;
+  document.getElementById("loginForm").style.display = "block";
+  document.getElementById("roleTitle").innerText =
+    r === "student" ? "Student Login" : "Teacher Login";
+}
+
+async function login() {
+  const res = await fetch("/api/login", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      username: username.value,
+      password: password.value,
+      role: role
+    })
+  });
+
+  const data = await res.json();
+
+  if(data.success){
+    window.location.href =
+      role === "student" ? "/student-dashboard" : "/teacher-dashboard";
+  } else {
+    error.innerText = "Invalid credentials";
+  }
+}
+</script>
+
+</body>
+</html>

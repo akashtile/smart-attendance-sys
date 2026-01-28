@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Attendance Records</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+<div class="layout">
+
+  <div class="sidebar">
+    <h2 class="logo">Attendance</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/live">Live Attendance</a>
+    <a href="/register">Register Student</a>
+    <a href="/records" class="active">Records</a>
+<a href="/students"><i class="fa-solid fa-users"></i> Students</a>
+
+
+  </div>
+
+  <div class="main">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+  <h1>Attendance Records</h1>
+  <a href="/api/export/excel" class="btn success">
+    <i class="fa-solid fa-file-excel"></i> Download Excel
+  </a>
+</div>
+
+
+    <div class="card">
+      <div style="display:flex;gap:10px;margin-bottom:10px;">
+  <input id="search" placeholder="Search name / roll / ERP" class="modern-input">
+  <input id="dateFilter" placeholder="DD-MM-YYYY" type="date"  class="modern-input">
+  <button class="btn primary" onclick="applyFilter()">
+    <i class="fa-solid fa-filter"></i> Filter
+  </button>
+</div>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Name</th>
+            <th>Roll</th>
+            <th>ERP</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  
+async function applyFilter() {
+  const q = document.getElementById("search").value;
+  const date = document.getElementById("dateFilter").value;
+
+  const res = await fetch(`/api/attendance/filter?q=${q}&date=${date}`);
+  const data = await res.json();
+
+  const tbody = document.getElementById("table-body");
+  tbody.innerHTML = "";
+
+  data.forEach(r => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${r.date}</td>
+        <td>${r.time}</td>
+        <td>${r.name}</td>
+        <td>${r.roll}</td>
+        <td>${r.erp}</td>
+        <td>${r.status}</td>
+      </tr>`;
+  });
+}
+
+
+async function loadRecords(){
+  const res = await fetch("/api/attendance/all");
+  const data = await res.json();
+
+  const tbody = document.getElementById("table-body");
+  tbody.innerHTML = "";
+
+  data.forEach(r => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${r.date}</td>
+        <td>${r.time}</td>
+        <td>${r.name}</td>
+        <td>${r.roll}</td>
+        <td>${r.erp}</td>
+        <td>${r.status}</td>
+      </tr>`;
+  });
+}
+
+loadRecords();
+setInterval(loadRecords, 3000);
+
+</script>
+<div id="toast" class="toast"></div>
+
+</body>
+</html>

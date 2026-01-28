@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Students</title>
+
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2 class="logo">Attendance</h2>
+    <a href="/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+    <a href="/live"><i class="fa-solid fa-camera"></i> Live Attendance</a>
+    <a href="/register"><i class="fa-solid fa-user-plus"></i> Register</a>
+    <a href="/records"><i class="fa-solid fa-table"></i> Records</a>
+    <a href="/students" class="active"><i class="fa-solid fa-users"></i> Students</a>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h1>Students</h1>
+    </div>
+
+    <!-- Card -->
+    <div class="card">
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Roll</th>
+            <th>ERP</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="students-body"></tbody>
+      </table>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.innerText = msg;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2500);
+}
+
+// Load students
+async function loadStudents() {
+  const res = await fetch("/api/students");
+  const data = await res.json();
+
+  const tbody = document.getElementById("students-body");
+  tbody.innerHTML = "";
+
+  data.forEach(s => {
+    tbody.innerHTML += `
+      <tr>
+        <td><input class="table-input" id="name-${s.id}" value="${s.name}"></td>
+        <td><input class="table-input" id="roll-${s.id}" value="${s.roll}"></td>
+        <td><input class="table-input" id="erp-${s.id}" value="${s.erp}"></td>
+        <td style="display:flex;gap:8px;">
+          <button class="btn success" onclick="updateStudent(${s.id})">
+            <i class="fa-solid fa-floppy-disk"></i>
+          </button>
+          <button class="btn danger" onclick="deleteStudent(${s.id})">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// Delete student
+async function deleteStudent(id) {
+  if (!confirm("Delete this student?")) return;
+
+  await fetch(`/api/students/delete/${id}`, { method: "DELETE" });
+  showToast("🗑 Student deleted");
+  loadStudents();
+}
+
+// Update student
+async function updateStudent(id) {
+  const name = document.getElementById(`name-${id}`).value;
+  const roll = document.getElementById(`roll-${id}`).value;
+  const erp  = document.getElementById(`erp-${id}`).value;
+
+  await fetch(`/api/students/update/${id}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, roll, erp })
+  });
+
+  showToast("💾 Student updated");
+}
+
+loadStudents();
+</script>
+
+</body>
+</html>

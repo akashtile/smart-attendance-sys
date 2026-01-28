@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Attendance</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2 class="logo">Attendance</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/live" class="active">Live Attendance</a>
+    <a href="/register">Register Student</a>
+    <a href="/records">Records</a>
+  
+<a href="/students"><i class="fa-solid fa-users"></i> Students</a>
+
+</div>
+
+
+  <!-- Main -->
+  <div class="main">
+    <h1>Live Attendance</h1>
+
+    <div class="card live-container">
+
+      <!-- Camera -->
+      <div class="camera-box">
+        <video id="video" autoplay></video>
+        <canvas id="canvas" hidden></canvas>
+      </div>
+
+      <!-- Status -->
+      <h3 class="status-text">
+        Status: <span id="result">Waiting...</span>
+      </h3>
+
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <button class="btn primary" onclick="startRecognition()">Start Recognition</button>
+        <button class="btn danger" onclick="stopRecognition()">Stop</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

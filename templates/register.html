@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register Student</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2 class="logo">Attendance</h2>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/live">Live Attendance</a>
+    <a href="/register" class="active">Register Student</a>
+    <a href="/records">Records</a>
+    
+<a href="/students"><i class="fa-solid fa-users"></i> Students</a>
+
+
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <h1>Register Student</h1>
+
+    <div class="card register-container">
+
+      <!-- Form -->
+      <div class="form-box">
+        <input id="name" placeholder="Student Name">
+        <input id="roll" placeholder="Roll Number">
+        <input id="erp" placeholder="ERP ID">
+
+        <div class="button-group">
+          <button class="btn primary" onclick="registerStudent()">Register</button>
+          <button class="btn success" onclick="captureImages()">Capture Images</button>
+        </div>
+
+        <p id="capture-status" class="status-text"></p>
+      </div>
+
+      <!-- Camera -->
+      <div class="camera-box">
+        <video id="video" autoplay></video>
+        <canvas id="canvas" hidden></canvas>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="/static/app.js"></script>
+<button onclick="deleteStudent(3)">Delete</button>
+
+</body>
+</html>
